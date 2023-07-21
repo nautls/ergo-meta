@@ -2,33 +2,47 @@ import { RefinementCtx, z } from "zod";
 import { base64 } from "@scure/base";
 import { SaxesParser } from "saxes";
 
-const encodedLogoSchema = z
-  .string()
-  .max(87_400) // equivalent in char length to ~64kb of base64 encoded data.
-  .superRefine(assertLogoContent);
+const _256HashString = z.string().length(64).refine(isHex);
+const _hexString = z.string().refine(isHex);
+const _bigIntString = z.string().refine(isInt);
+const _logo = z.string().max(87_400).superRefine(assertLogo); // 87_400 is equivalent in char length to ~64kb of base64 encoded data.
 
 export const metadataSchema = z.object({
   name: z.string().min(1).max(50),
   description: z.string().max(500),
   url: z.string().max(250).optional(),
-  logo: z.union([
-    encodedLogoSchema,
-    z.object({ light: encodedLogoSchema, dark: encodedLogoSchema }).strict()
-  ])
+  logo: z.union([_logo, z.object({ light: _logo, dark: _logo }).strict()])
 });
 
 export const tokenMetadataSchema = metadataSchema
   .extend({
-    tokenId: z
-      .string()
-      .length(64) // 32bytes hex string
-      .refine(isHex, "Invalid hex string."),
-    decimals: z.number().min(0).max(19).optional(),
+    tokenId: _256HashString,
+    decimals: z.number().int().min(0).max(19).optional(),
     ticker: z.string().min(2).max(9).optional()
   })
   .strict();
 
-const boxSchema = z.object({ boxId: z.string() }); // todo: complete schema
+const boxSchema = z
+  .object({
+    boxId: _256HashString,
+    transactionId: _256HashString,
+    index: z.number().int().min(0),
+    ergoTree: _hexString,
+    creationHeight: z.number().int().min(0),
+    value: _bigIntString,
+    assets: z.array(z.object({ tokenId: _256HashString, amount: _bigIntString }).strict()),
+    additionalRegisters: z
+      .object({
+        R4: _hexString.optional(),
+        R5: _hexString.optional(),
+        R6: _hexString.optional(),
+        R7: _hexString.optional(),
+        R8: _hexString.optional(),
+        R9: _hexString.optional()
+      })
+      .strict()
+  })
+  .strict();
 
 export const tokenSignatureSchema = z.object({
   mintingBox: boxSchema,
@@ -38,11 +52,14 @@ export const tokenSignatureSchema = z.object({
 
 export const contractMetadataSchema = metadataSchema
   .extend({
-    template: z.string().max(8_192), // 4kb hex string
+    template: z.string().max(8_192).refine(isHex), // 4kb hex string
     source: z
       .object({
         script: z.string(),
-        buildParams: z.object({ map: z.record(z.string(), z.string()) }).optional()
+        buildParams: z
+          .object({ map: z.record(z.string(), _hexString) })
+          .strict()
+          .optional()
       })
       .strict()
       .optional()
@@ -52,6 +69,11 @@ export const contractMetadataSchema = metadataSchema
 const HEX_PATTERN = /^[0-9A-Fa-f]+$/s;
 function isHex(value: string): boolean {
   return HEX_PATTERN.test(value);
+}
+
+const INTEGER_PATTERN = /^\d+$/s;
+function isInt(value: string): boolean {
+  return INTEGER_PATTERN.test(value);
 }
 
 function isPng(bytes: Uint8Array): boolean {
@@ -68,7 +90,7 @@ function isPng(bytes: Uint8Array): boolean {
   );
 }
 
-function assertLogoContent(val: string, ctx: RefinementCtx): void {
+function assertLogo(val: string, ctx: RefinementCtx): void {
   const onError = ({ message }: Error) => ctx.addIssue({ code: "custom", message });
 
   const bytes = safeRun(() => base64.decode(val), onError);
