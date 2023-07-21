@@ -4,7 +4,7 @@ import { RuleSetValidationResult, ValidationContext } from "shared/types.ts";
 import { cyan, green, red } from "std/fmt/colors.ts";
 
 (async () => {
-  const filenames = ["03faf2cb329f2e90d6d23b58d91bbb6c046aa143261cc21f52fbe2824bfcbf04.json"]; // Deno.args;
+  const filenames = Deno.args;
   if (filenames.length === 0) {
     console.log("No metadata changes.");
   }
