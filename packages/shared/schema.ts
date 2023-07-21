@@ -2,9 +2,9 @@ import { RefinementCtx, z } from "zod";
 import { base64 } from "@scure/base";
 import { SaxesParser } from "saxes";
 
-const _256HashString = z.string().length(64).refine(isHex);
 const _hexString = z.string().refine(isHex);
 const _bigIntString = z.string().refine(isInt);
+const _256Hash = z.string().length(64).refine(isHex);
 const _logo = z.string().max(87_400).superRefine(assertLogo); // 87_400 is equivalent in char length to ~64kb of base64 encoded data.
 
 export const metadataSchema = z.object({
@@ -16,7 +16,7 @@ export const metadataSchema = z.object({
 
 export const tokenMetadataSchema = metadataSchema
   .extend({
-    tokenId: _256HashString,
+    tokenId: _256Hash,
     decimals: z.number().int().min(0).max(19).optional(),
     ticker: z.string().min(2).max(9).optional()
   })
@@ -24,13 +24,13 @@ export const tokenMetadataSchema = metadataSchema
 
 const boxSchema = z
   .object({
-    boxId: _256HashString,
-    transactionId: _256HashString,
+    boxId: _256Hash,
+    transactionId: _256Hash,
     index: z.number().int().min(0),
     ergoTree: _hexString,
     creationHeight: z.number().int().min(0),
     value: _bigIntString,
-    assets: z.array(z.object({ tokenId: _256HashString, amount: _bigIntString }).strict()),
+    assets: z.array(z.object({ tokenId: _256Hash, amount: _bigIntString }).strict()),
     additionalRegisters: z
       .object({
         R4: _hexString.optional(),
