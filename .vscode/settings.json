@@ -1,0 +1,6 @@
+{
+  "deno.unstable": true,
+  "deno.lint": true,
+  "deno.enablePaths": ["./packages/builder", "./packages/shared"],
+  "deno.importMap": "./packages/deno.jsonc"
+}

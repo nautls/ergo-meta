@@ -1,0 +1,18 @@
+{
+  "tasks": {
+    "dev": "deno run --watch --allow-read ./builder/check.ts",
+    "check": "deno run --allow-read ./builder/check.ts",
+    "refresh-lock": "deno cache --lock-write ./builder/check.ts"
+  },
+  "imports": {
+    "@scure/base": "https://esm.sh/@scure/base@1.1.1",
+    "zod": "https://deno.land/x/zod@v3.21.4/mod.ts",
+    "sigmastate-js": "https://esm.sh/sigmastate-js@0.2.1/main",
+    "std/": "https://deno.land/std@0.194.0/",
+    "saxes": "https://esm.sh/saxes@6.0.0",
+    "shared/": "./shared/"
+  },
+  "fmt": {
+    "lineWidth": 100
+  }
+}
