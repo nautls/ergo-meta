@@ -1,1 +1,1 @@
-# ergo-meta off-chain registry
+# Ergo off-chain metadata registry
