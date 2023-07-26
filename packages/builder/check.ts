@@ -1,3 +1,4 @@
+import YAML from "yaml";
 import { resolve } from "std/path/mod.ts";
 import { schemaValidations, validate } from "./rules.ts";
 import { RuleSetValidationResult, ValidationContext } from "shared/types.ts";
@@ -11,7 +12,7 @@ import { cyan, green, red } from "std/fmt/colors.ts";
 
   for (const filename of filenames) {
     const context = {
-      entry: JSON.parse(await Deno.readTextFile(resolve("../metadata/tokens", filename))),
+      entry: YAML.parse(await Deno.readTextFile(resolve("../metadata/tokens", filename))),
       filename
     };
     const resultSet = validate(schemaValidations, context);

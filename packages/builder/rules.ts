@@ -35,7 +35,7 @@ export const schemaValidations: ValidationRuleSet = {
     },
     {
       name: "Filename matching.",
-      test: ({ entry, filename }) => assertEqual(`${entry.tokenId}.json`, filename)
+      test: ({ entry, filename }) => assertEqual(`${entry.tokenId}.yaml`, filename)
     }
   ]
 };
