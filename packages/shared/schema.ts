@@ -6,19 +6,21 @@ const _hexString = z.string().refine(isHex);
 const _bigIntString = z.string().refine(isInt);
 const _256Hash = z.string().length(64).refine(isHex);
 const _logo = z.string().max(87_400).superRefine(assertLogo); // 87_400 is equivalent in char length to ~64kb of base64 encoded data.
+const _name = z.string().min(1).max(50);
+const _description = z.string().max(500);
 
 export const metadataSchema = z.object({
-  name: z.string().min(1).max(50),
-  description: z.string().max(500),
-  url: z.string().max(250).optional(),
-  logo: z.union([_logo, z.object({ light: _logo, dark: _logo }).strict()])
+  name: _name,
+  description: _description,
+  url: z.string().max(250).optional()
 });
 
 export const tokenMetadataSchema = metadataSchema
   .extend({
     tokenId: _256Hash,
     decimals: z.number().int().min(0).max(19).optional(),
-    ticker: z.string().min(2).max(9).optional()
+    ticker: z.string().min(2).max(9).optional(),
+    logo: z.union([_logo, z.object({ light: _logo, dark: _logo }).strict()])
   })
   .strict();
 
@@ -62,13 +64,25 @@ export const contractMetadataSchema = metadataSchema
           .optional()
       })
       .strict()
+      .optional(),
+    registersNames: z
+      .object({
+        R4: _name.optional(),
+        R5: _name.optional(),
+        R6: _name.optional(),
+        R7: _name.optional(),
+        R8: _name.optional(),
+        R9: _name.optional()
+      })
+      .strict()
       .optional()
   })
   .strict();
 
 const HEX_PATTERN = /^[0-9A-Fa-f]+$/s;
-function isHex(value: string): boolean {
-  return HEX_PATTERN.test(value);
+function isHex(str: string): boolean {
+  if (str.length % 2) return false;
+  return HEX_PATTERN.test(str);
 }
 
 const INTEGER_PATTERN = /^\d+$/s;
@@ -113,7 +127,7 @@ function validateSvg(bytes: Uint8Array, onError: (error: Error) => void) {
   parser.on("error", onError);
   parser.on("opentag", (tag) => {
     if (tag.name === "script") {
-      parser.fail("The <script> tag is not allowed in .svg files.");
+      parser.fail("The '<script>' tag is not allowed for .svg files.");
     }
   });
 
