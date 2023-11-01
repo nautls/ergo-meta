@@ -1,6 +1,7 @@
 import { RefinementCtx, z } from "zod";
 import { base64 } from "@scure/base";
 import { SaxesParser } from "saxes";
+import { isHex } from "@fleet-sdk/common";
 
 const _hexString = z.string().refine(isHex);
 const _bigIntString = z.string().refine(isInt);
@@ -65,7 +66,8 @@ export const contractMetadataSchema = metadataSchema
       })
       .strict()
       .optional(),
-    registersNames: z
+    variables: z.record(z.number(), _name).optional(),
+    registers: z
       .object({
         R4: _name.optional(),
         R5: _name.optional(),
@@ -78,12 +80,6 @@ export const contractMetadataSchema = metadataSchema
       .optional()
   })
   .strict();
-
-const HEX_PATTERN = /^[0-9A-Fa-f]+$/s;
-function isHex(str: string): boolean {
-  if (str.length % 2) return false;
-  return HEX_PATTERN.test(str);
-}
 
 const INTEGER_PATTERN = /^\d+$/s;
 function isInt(value: string): boolean {
@@ -138,6 +134,6 @@ function safeRun<T>(fn: () => T, onError?: (error: Error) => void): T | undefine
   try {
     return fn();
   } catch (e) {
-    if (onError) onError(e);
+    if (onError) onError(e as Error);
   }
 }
