@@ -1,12 +1,12 @@
-import { tokenMetadataSchema } from "shared/schema.ts";
+import { tokenMetadataSchema } from "../shared/schema.ts";
 import {
   RuleSetValidationResult,
   ValidationContext,
   ValidationResult,
   ValidationRule,
   ValidationRuleSet
-} from "shared/types.ts";
-import { assertEqual, assertSchema } from "./assertions.ts";
+} from "../shared/types.ts";
+import { assertEndsWith, assertEqual, assertSchema } from "./assertions.ts";
 
 export function validate(
   ruleSet: ValidationRuleSet,
@@ -35,7 +35,7 @@ export const schemaValidations: ValidationRuleSet = {
     },
     {
       name: "Filename matching.",
-      test: ({ entry, filename }) => assertEqual(`${entry.tokenId}.yaml`, filename)
+      test: ({ entry, filename }) => assertEndsWith(filename, `/${entry.tokenId}.yaml`)
     }
   ]
 };

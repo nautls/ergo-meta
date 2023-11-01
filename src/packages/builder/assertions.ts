@@ -1,8 +1,12 @@
 import { ZodSchema } from "zod";
-import { ValidationResult, ValidationError } from "shared/types.ts";
+import { ValidationResult, ValidationError } from "../shared/types.ts";
 
 export function assertEqual(a: unknown, b: unknown) {
   return assert(a === b, `Expected '${a}' to be equal to '${b}'.`);
+}
+
+export function assertEndsWith(a: string, b: string) {
+  return assert(a.endsWith(b), `Expected '${a}' to math '${b}'.`);
 }
 
 function assert(condition: boolean | boolean[], message?: string): ValidationResult {

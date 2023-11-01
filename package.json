@@ -1,0 +1,23 @@
+{
+  "name": "ergo-meta",
+  "module": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "check": "bun run ./src/packages/builder/check.ts"
+  },
+  "dependencies": {
+    "@fleet-sdk/common": "^0.2.3",
+    "@fleet-sdk/compiler": "^0.2.3",
+    "@fleet-sdk/crypto": "^0.2.3",
+    "picocolors": "^1.0.0",
+    "saxes": "^6.0.0",
+    "yaml": "^2.3.3",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
