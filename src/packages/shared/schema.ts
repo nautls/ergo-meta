@@ -8,11 +8,10 @@ const _bigIntString = z.string().refine(isInt);
 const _256Hash = z.string().length(64).refine(isHex);
 const _logo = z.string().max(87_400).superRefine(assertLogo); // 87_400 is equivalent in char length to ~64kb of base64 encoded data.
 const _name = z.string().min(1).max(50);
-const _description = z.string().max(500);
 
 export const metadataSchema = z.object({
   name: _name,
-  description: _description,
+  description: z.string().max(500).optional(),
   url: z.string().max(250).optional()
 });
 
