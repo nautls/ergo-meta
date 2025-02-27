@@ -20,7 +20,7 @@ export const tokenMetadataSchema = metadataSchema
     $schema: z.literal("./token-metadata.schema.json").optional(),
     tokenId: _256Hash,
     ticker: z.string().min(2).max(9).optional(),
-    logo: z.string().max(87_400).superRefine(assertLogo) // 87_400 is equivalent in char length to ~64kb of base64 encoded data.
+    logo: z.string().max(87_400).superRefine(assertLogo).optional() // 87_400 is equivalent in char length to ~64kb of base64 encoded data.
     // decimals: z.number().int().min(0).max(19).optional(),
   })
   .strict();
