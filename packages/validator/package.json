@@ -4,12 +4,12 @@
   "type": "module",
   "scripts": {
     "check": "bun run ./src/checker/index.ts",
-    "gen:schema:token": "bun run ./src/schema/generate.ts"
+    "gen:schema:token": "bun run ./src/schema/generate.ts",
+    "test:format": "prettier ./src --check",
+    "fix:format": "prettier ./src --write"
   },
   "dependencies": {
-    "@fleet-sdk/common": "^0.4.1",
-    "@fleet-sdk/compiler": "^0.2.3",
-    "@fleet-sdk/crypto": "^0.5.0",
+    "@fleet-sdk/common": "^0.8.0",
     "picocolors": "^1.1.1",
     "prettier": "^3.5.2",
     "saxes": "^6.0.0",
@@ -17,9 +17,7 @@
     "zod-to-json-schema": "^3.24.3"
   },
   "devDependencies": {
-    "bun-types": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5.5.2"
+    "bun-types": "latest",
+    "typescript": "^5.7.3"
   }
 }
