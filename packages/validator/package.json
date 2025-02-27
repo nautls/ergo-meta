@@ -3,21 +3,23 @@
   "module": "src/index.ts",
   "type": "module",
   "scripts": {
-    "check": "bun run ./src/packages/builder/check.ts"
+    "check": "bun run ./src/checker/index.ts",
+    "gen:schema:token": "bun run ./src/schema/generate.ts"
   },
   "dependencies": {
     "@fleet-sdk/common": "^0.4.1",
     "@fleet-sdk/compiler": "^0.2.3",
     "@fleet-sdk/crypto": "^0.5.0",
-    "picocolors": "^1.0.1",
+    "picocolors": "^1.1.1",
+    "prettier": "^3.5.2",
     "saxes": "^6.0.0",
-    "yaml": "^2.4.5",
-    "zod": "^3.23.8"
+    "zod": "^3.24.2",
+    "zod-to-json-schema": "^3.24.3"
   },
   "devDependencies": {
     "bun-types": "latest"
   },
   "peerDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.5.2"
   }
 }
