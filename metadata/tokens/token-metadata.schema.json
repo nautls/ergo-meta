@@ -23,15 +23,15 @@
       "minLength": 64,
       "maxLength": 64
     },
-    "ticker": {
-      "type": "string",
-      "minLength": 2,
-      "maxLength": 9
-    },
     "decimals": {
       "type": "integer",
       "minimum": 0,
       "maximum": 19
+    },
+    "ticker": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 9
     },
     "logo": {
       "type": "string",
@@ -40,7 +40,8 @@
   },
   "required": [
     "name",
-    "tokenId"
+    "tokenId",
+    "decimals"
   ],
   "additionalProperties": false,
   "$schema": "http://json-schema.org/draft-07/schema#"
