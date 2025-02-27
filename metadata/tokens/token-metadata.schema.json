@@ -28,6 +28,11 @@
       "minLength": 2,
       "maxLength": 9
     },
+    "decimals": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 19
+    },
     "logo": {
       "type": "string",
       "maxLength": 87400
