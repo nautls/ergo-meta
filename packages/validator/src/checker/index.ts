@@ -1,28 +1,33 @@
 import { schemaValidations, validate } from "./rules.ts";
 import { RuleSetValidationResult, ValidationContext } from "../schema/types.ts";
 import { cyan, green, red, bold } from "picocolors";
+import { Glob } from "bun";
 
-const METADATA_DIR = "../../../../metadata";
+const METADATA_DIR = "../../metadata";
 
-const filenames = Bun.argv.slice(2);
-if (!filenames || filenames.length === 0) {
+if (Bun.argv.length <= 2) {
   console.log("No metadata changes.");
   process.exit(0);
 }
 
+const filenames =
+  Bun.argv[2] === "all-tokens"
+    ? new Glob(`${METADATA_DIR}/tokens/*[!schema].json`).scanSync()
+    : Bun.argv.slice(2);
+
 for (const filename of filenames) {
-  const path = r(filename);
   const context = {
-    entry: JSON.parse(await Bun.file(path).text()),
+    entry: JSON.parse(await Bun.file(r(filename)).text()),
     filename
   };
-  const resultSet = validate(schemaValidations, context);
-  print(resultSet, context);
+
+  const result = validate(schemaValidations, context);
+  print(result, context);
 }
 
 function print(resultSet: RuleSetValidationResult, context: ValidationContext): void {
   console.log(
-    `Running ${resultSet.ruleSet.name} checks for ${resultSet.ruleSet.type} metadata file ${context.filename}`
+    `Running ${resultSet.ruleSet.name} checks for ${resultSet.ruleSet.type} metadata '${context.entry.name}' '${context.entry.tokenId ?? context.filename}'`
   );
 
   for (const vr of resultSet.results) {
@@ -55,5 +60,5 @@ function tag(content: unknown) {
 }
 
 function r(filename: string) {
-  return Bun.resolveSync(`${METADATA_DIR}/tokens/${filename}`, import.meta.dir);
+  return `${METADATA_DIR}/tokens/${filename}`;
 }
