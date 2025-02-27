@@ -1,12 +1,12 @@
-import { tokenMetadataSchema } from "../shared/schema.ts";
+import { tokenMetadataSchema } from "../schema/index.ts";
 import {
   RuleSetValidationResult,
   ValidationContext,
   ValidationResult,
   ValidationRule,
   ValidationRuleSet
-} from "../shared/types.ts";
-import { assertEndsWith, assertEqual, assertSchema } from "./assertions.ts";
+} from "../schema/types.ts";
+import { assertEndsWith, assertSchema } from "./assertions.ts";
 
 export function validate(
   ruleSet: ValidationRuleSet,
@@ -27,15 +27,15 @@ function execute(rule: ValidationRule, context: ValidationContext): ValidationRe
 
 export const schemaValidations: ValidationRuleSet = {
   type: "token",
-  name: "Well-formedness rules",
+  name: "well-formedness",
   rules: [
+    {
+      name: "Filename matching.",
+      test: ({ entry, filename }) => assertEndsWith(filename, `${entry.tokenId}.json`)
+    },
     {
       name: "Schema validation.",
       test: ({ entry }) => assertSchema(entry, tokenMetadataSchema)
-    },
-    {
-      name: "Filename matching.",
-      test: ({ entry, filename }) => assertEndsWith(filename, `/${entry.tokenId}.yaml`)
     }
   ]
 };

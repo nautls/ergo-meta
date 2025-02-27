@@ -6,10 +6,10 @@ import { isHex } from "@fleet-sdk/common";
 const _hexString = z.string().refine(isHex);
 const _bigIntString = z.string().refine(isInt);
 const _256Hash = z.string().length(64).refine(isHex);
-const _logo = z.string().max(87_400).superRefine(assertLogo); // 87_400 is equivalent in char length to ~64kb of base64 encoded data.
 const _name = z.string().min(1).max(50);
 
 export const metadataSchema = z.object({
+  $schema: z.literal("./token-metadata.schema.json").optional(),
   name: _name,
   description: z.string().max(500).optional(),
   url: z.string().max(250).optional()
@@ -18,9 +18,9 @@ export const metadataSchema = z.object({
 export const tokenMetadataSchema = metadataSchema
   .extend({
     tokenId: _256Hash,
-    decimals: z.number().int().min(0).max(19).optional(),
     ticker: z.string().min(2).max(9).optional(),
-    logo: z.union([_logo, z.object({ light: _logo, dark: _logo }).strict()])
+    logo: z.string().max(87_400).superRefine(assertLogo) // 87_400 is equivalent in char length to ~64kb of base64 encoded data.
+    // decimals: z.number().int().min(0).max(19).optional(),
   })
   .strict();
 
@@ -99,30 +99,57 @@ function isPng(bytes: Uint8Array): boolean {
   );
 }
 
-function assertLogo(val: string, ctx: RefinementCtx): void {
-  const onError = ({ message }: Error) => ctx.addIssue({ code: "custom", message });
+const SVG_BASE64_DATA_URL = "data:image/svg+xml;base64,";
+const PNG_BASE64_DATA_URL = "data:image/png;base64,";
 
-  const bytes = safeRun(() => base64.decode(val), onError);
-  if (!bytes) {
+function assertLogo(content: string, ctx: RefinementCtx): void {
+  const logError = ({ message }: Error) => ctx.addIssue({ code: "custom", message });
+
+  const type = content.startsWith(PNG_BASE64_DATA_URL)
+    ? PNG_BASE64_DATA_URL
+    : content.startsWith(SVG_BASE64_DATA_URL)
+    ? SVG_BASE64_DATA_URL
+    : undefined;
+
+  if (!type) {
+    logError(
+      Error(
+        `The logo must be prefixed with either '${PNG_BASE64_DATA_URL}' or '${SVG_BASE64_DATA_URL}' according to the image type.`
+      )
+    );
     return;
   }
 
-  if (!isPng(bytes)) {
-    validateSvg(bytes, onError);
+  const bytes = safeRun(() => base64.decode(content.replace(type, "")), logError);
+  if (!bytes) return;
+
+  if (type === "data:image/png;base64,") {
+    if (!isPng(bytes)) {
+      logError(
+        Error(`The logo Data URL Type is '${type}' but the content is not a valid PNG image.`)
+      );
+    }
+  } else {
+    if (isPng(bytes)) {
+      logError(
+        Error(`The logo Data URL Type is '${type}' but the content is not a valid SVG image.`)
+      );
+      return;
+    }
+
+    validateSvg(bytes, logError);
   }
 }
 
 function validateSvg(bytes: Uint8Array, onError: (error: Error) => void) {
   const decoded = safeRun(() => new TextDecoder().decode(bytes), onError);
-  if (!decoded) {
-    return;
-  }
+  if (!decoded) return;
 
   const parser = new SaxesParser();
   parser.on("error", onError);
   parser.on("opentag", (tag) => {
     if (tag.name === "script") {
-      parser.fail("The '<script>' tag is not allowed for .svg files.");
+      parser.fail("The '<script>' tag is not allowed in .svg files.");
     }
   });
 

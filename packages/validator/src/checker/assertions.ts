@@ -1,5 +1,5 @@
 import { ZodSchema } from "zod";
-import { ValidationResult, ValidationError } from "../shared/types.ts";
+import { ValidationResult, ValidationError } from "../schema/types.ts";
 
 export function assertEqual(a: unknown, b: unknown) {
   return assert(a === b, `Expected '${a}' to be equal to '${b}'.`);

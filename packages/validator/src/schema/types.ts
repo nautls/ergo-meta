@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { contractMetadataSchema, tokenMetadataSchema } from "./schema.ts";
+import { contractMetadataSchema, tokenMetadataSchema } from "./index.ts";
 
 export type TokenMetadata = z.infer<typeof tokenMetadataSchema>;
 export type ContractMetadata = z.infer<typeof contractMetadataSchema>;
