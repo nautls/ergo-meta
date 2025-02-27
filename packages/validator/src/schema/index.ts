@@ -9,7 +9,7 @@ const _256Hash = z.string().length(64).refine(isHex);
 const _name = z.string().min(1).max(50);
 
 export const metadataSchema = z.object({
-  $schema: z.literal("./token-metadata.schema.json").optional(),
+  $schema: z.string().optional(),
   name: _name,
   description: z.string().max(500).optional(),
   url: z.string().max(250).optional()
@@ -17,6 +17,7 @@ export const metadataSchema = z.object({
 
 export const tokenMetadataSchema = metadataSchema
   .extend({
+    $schema: z.literal("./token-metadata.schema.json").optional(),
     tokenId: _256Hash,
     ticker: z.string().min(2).max(9).optional(),
     logo: z.string().max(87_400).superRefine(assertLogo) // 87_400 is equivalent in char length to ~64kb of base64 encoded data.
@@ -54,6 +55,7 @@ export const tokenSignatureSchema = z.object({
 
 export const contractMetadataSchema = metadataSchema
   .extend({
+    $schema: z.literal("./contract-metadata.schema.json").optional(),
     template: z.string().max(8_192).refine(isHex), // 4kb hex string
     source: z
       .object({
@@ -108,8 +110,8 @@ function assertLogo(content: string, ctx: RefinementCtx): void {
   const type = content.startsWith(PNG_BASE64_DATA_URL)
     ? PNG_BASE64_DATA_URL
     : content.startsWith(SVG_BASE64_DATA_URL)
-    ? SVG_BASE64_DATA_URL
-    : undefined;
+      ? SVG_BASE64_DATA_URL
+      : undefined;
 
   if (!type) {
     logError(

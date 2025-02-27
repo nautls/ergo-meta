@@ -1,0 +1,82 @@
+{
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "./contract-metadata.schema.json"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 50
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "url": {
+      "type": "string",
+      "maxLength": 250
+    },
+    "template": {
+      "type": "string",
+      "maxLength": 8192
+    },
+    "source": {
+      "type": "object",
+      "properties": {
+        "script": {
+          "type": "string"
+        },
+        "buildParams": {
+          "type": "object",
+          "properties": {
+            "map": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          "required": ["map"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["script"],
+      "additionalProperties": false
+    },
+    "variables": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/properties/name"
+      }
+    },
+    "registers": {
+      "type": "object",
+      "properties": {
+        "R4": {
+          "$ref": "#/properties/name"
+        },
+        "R5": {
+          "$ref": "#/properties/name"
+        },
+        "R6": {
+          "$ref": "#/properties/name"
+        },
+        "R7": {
+          "$ref": "#/properties/name"
+        },
+        "R8": {
+          "$ref": "#/properties/name"
+        },
+        "R9": {
+          "$ref": "#/properties/name"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": ["name", "template"],
+  "additionalProperties": false,
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}
