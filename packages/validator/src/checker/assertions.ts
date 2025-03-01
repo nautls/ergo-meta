@@ -6,7 +6,7 @@ export function assertEqual(a: unknown, b: unknown) {
 }
 
 export function assertEndsWith(a: string, b: string) {
-  return assert(a.endsWith(b), `Expected '${a}' to math '${b}'.`);
+  return assert(a.endsWith(b), `Expected '${a}' to match '${b}'.`);
 }
 
 function assert(condition: boolean | boolean[], message?: string): ValidationResult {
