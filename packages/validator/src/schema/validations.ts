@@ -1,5 +1,5 @@
 import { RefinementCtx, z } from "zod";
-import { base64 } from "@scure/base";
+import { base64 } from "@fleet-sdk/crypto";
 import { SaxesParser } from "saxes";
 
 const INTEGER_PATTERN = /^\d+$/s;

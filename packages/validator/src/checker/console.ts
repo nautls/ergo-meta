@@ -1,7 +1,7 @@
 import { bold, green, red, cyan } from "picocolors";
 import { RuleSetValidationResult, ValidationContext } from "../schema/types";
 
-export function log(resultSet: RuleSetValidationResult, context: ValidationContext): void {
+export function print(resultSet: RuleSetValidationResult, context: ValidationContext): void {
   console.log(
     `Running ${resultSet.ruleSet.name} checks for ${resultSet.ruleSet.type} metadata '${context.entry.name}' '${context.entry.tokenId ?? context.filename}'`
   );

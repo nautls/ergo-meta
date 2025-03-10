@@ -1,5 +1,5 @@
 {
-  "name": "ergo-meta",
+  "name": "validator",
   "module": "src/index.ts",
   "type": "module",
   "scripts": {
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@fleet-sdk/common": "^0.8.0",
+    "@fleet-sdk/crypto": "^0.8.2",
     "picocolors": "^1.1.1",
     "prettier": "^3.5.2",
     "saxes": "^6.0.0",

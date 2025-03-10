@@ -1,0 +1,10 @@
+{
+  "name": "ergo-meta",
+  "private": true,
+  "scripts": {
+    "check-all": "bun --filter=\"validator\" check --all-tokens"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}
