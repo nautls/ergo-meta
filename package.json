@@ -2,7 +2,7 @@
   "name": "ergo-meta",
   "private": true,
   "scripts": {
-    "check-all": "bun --filter=\"validator\" check --all-tokens"
+    "check-all": "bun --filter=\"checker\" check --all-tokens"
   },
   "workspaces": [
     "packages/*"

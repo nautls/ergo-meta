@@ -1,9 +1,9 @@
 {
-  "name": "validator",
+  "name": "checker",
   "module": "src/index.ts",
   "type": "module",
   "scripts": {
-    "check": "bun run ./src/checker/index.ts",
+    "check": "bun run ./src/index.ts",
     "gen:schema:token": "bun run ./src/schema/generate.ts",
     "test:format": "prettier ./src --check",
     "fix:format": "prettier ./src --write"

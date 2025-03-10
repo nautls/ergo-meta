@@ -1,6 +1,6 @@
-import { schemaValidations, validate } from "./rules.ts";
+import { schemaValidations, validate } from "./validations/rules.ts";
 import { Glob, argv, file } from "bun";
-import { print } from "./console.ts";
+import { print } from "./utils/console.ts";
 
 const METADATA_DIR = "../../metadata";
 const r = (filename: string) => `${METADATA_DIR}/tokens/${filename}`;
