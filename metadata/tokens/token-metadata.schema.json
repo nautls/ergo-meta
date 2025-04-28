@@ -16,6 +16,7 @@
     },
     "url": {
       "type": "string",
+      "format": "uri",
       "maxLength": 250
     },
     "tokenId": {

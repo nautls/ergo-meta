@@ -11,7 +11,7 @@ export const metadataSchema = z.object({
   $schema: z.string().optional(),
   name: _name,
   description: z.string().max(500).optional(),
-  url: z.string().max(250).optional()
+  url: z.string().url().max(250).optional()
 });
 
 export const tokenMetadataSchema = metadataSchema
