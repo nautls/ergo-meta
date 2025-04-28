@@ -2,9 +2,9 @@ import { isHex } from "@fleet-sdk/common";
 import { z } from "zod";
 import { validateLogo, isInt } from "./validations";
 
-const _hexString = z.string().refine(isHex);
+const _hexString = z.string().refine(isHex, "String must be a valid hex string");
 const _bigIntString = z.string().refine(isInt);
-const _256Hash = z.string().length(64).refine(isHex);
+const _256Hash = z.string().length(64).refine(isHex, "String must be a valid 256-bit hex hash.");
 const _name = z.string().min(1).max(50);
 
 export const metadataSchema = z.object({

@@ -30,11 +30,11 @@ export const schemaValidations: ValidationRuleSet = {
   name: "well-formedness",
   rules: [
     {
-      name: "Filename matching.",
+      name: "Filename matching",
       test: ({ entry, filename }) => assertEndsWith(filename, `${entry.tokenId}.json`)
     },
     {
-      name: "Schema validation.",
+      name: "Schema validation",
       test: ({ entry }) => assertSchema(entry, tokenMetadataSchema)
     }
   ]
